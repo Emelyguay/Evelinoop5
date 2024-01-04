@@ -1,0 +1,60 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> createAndShowGUI());
+    }
+
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("Typing Tutor");
+        frame.setLayout(new BorderLayout());
+
+        JTextArea textArea = new JTextArea(10, 40);
+        textArea.setEditable(false);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Options");
+        JMenuItem selectPangramItem = new JMenuItem("Select Pangram");
+        menu.add(selectPangramItem);
+        menuBar.add(menu);
+        frame.setJMenuBar(menuBar);
+
+        String[] pangrams = {
+                "El viejo Señor Gómez pedía queso, kiwi y habas, pero le ha tocado un saxofón.",
+                "La cigüeña tocaba cada vez mejor el saxofón y el búho pedía kiwi y queso",
+                "Borja quiso el extraño menú de gazpacho, kiwi, uva y flan",
+                "Fidel exporta gazpacho, jamón, kiwi, viñas y buques"
+        };
+
+        JPanel keyboardPanel = new JPanel(new GridLayout(3, 10));
+        JButton[] keys = new JButton[30];
+        for (int i = 0; i < 30; i++) {
+            keys[i] = new JButton(String.valueOf((char) ('A' + i)));
+            keys[i].setOpaque(true);
+            keys[i].setBackground(Color.WHITE);
+            keys[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            int finalI = i;
+            keys[i].addActionListener(e -> {
+                textArea.append(String.valueOf((char) ('A' + finalI)));
+                keys[finalI].setBackground(Color.YELLOW);
+            });
+            keyboardPanel.add(keys[i]);
+        }
+
+        selectPangramItem.addActionListener(e -> {
+            String selectedPangram = pangrams[(int) (Math.random() * pangrams.length)];
+            JOptionPane.showMessageDialog(frame, selectedPangram);
+        });
+
+        frame.add(new JScrollPane(textArea), BorderLayout.NORTH);
+        frame.add(keyboardPanel, BorderLayout.CENTER);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+}
+
